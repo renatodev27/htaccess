@@ -1,0 +1,306 @@
+# Este símbolo sirve para comentar una línea
+[F] Forbidden (Prohibido): El servidor devuelve un 403 Forbidden
+[L] Last rule (Última regla): Indica al servidor que deje de hacer rewrite
+[N] Next (Siguiente): Le indica a apache que vuelva a ejecutar el rewrite hasta que todas se hayan ejecutado
+[G] Gone (ido): Le indica al servidor que muestre un mensaje de estado Gone (No longer exists)
+[P] Proxy: Le indica al servidor que gestione las peticiones mediante mod_proxy
+[C] Chain (cadena): Le indica al servidor que encadene la regla actual con la anterior
+[R] Redirect (redirigir): Le indica a apache que lance una redirección, el navegador mostrará la URL re-escrita/modificada
+[NC] No case: Define cualquier argumento asociado como no afectado por mayúsculas-minúsculas (Case Insensitive)
+[PT] Pass Through (a través): Le indica a mod_rewrite que pase la URL re-escrita a apache para que la procese de nuevo
+[OR] Or: Especifica la lógica "or" para enlazar dos expresiones y cuando se cumpla se aplique la regla asociada
+[NE] No Escape: Indica al servidor que redistribuya la salida sin escapar carateres
+[NS] No Subrequest: Indica al servidor que se salte la directiva si hay subrequests
+[QSA] Append Query String: El servidor añade una petición 
+[S=x] Skip: Indica al servidor que se salte las siguientes "x" reglas si encuentra alguna coincidencia
+[E=variable:value] Environmental Variable (Variable de entorno): indica al servidor que establezca la variable de entorno "variable" el valor "value"
+[T=MIME-type] MimeType. declara el tipo de mime del recurso al que está dirigido
+
+[]
+  * Especifica una clase de carácter, por cualquier carácter dentro de los corchetes se considerará
+    una coincidencia, por ejemplo en [xyz], con x,y,z
+
+[]+
+  * Calse de carácter en el que cualquier combinación de elementos dentro de los corchetes se
+    considera una coincidencia; por ejemplo [zyz]+ considerará una coincidencia cualquier número
+    de "x", "y" o "z", o cualquier combinación de estos caracteres.
+
+[^]
+  * Especifica que no está dentro de una clase de carácter; por ejemplo, [^xyz] considerará una
+    coincidencia cualquier carácter que no sea "x", "y" o "z"
+  
+[a-z]
+  * Un guión (-) entro dos caracteres dentro de corchetes "[]" define un rango de caracteres; por
+    ejemplo [a-zA-Z] se refiere a todas las letras en mayúscias y minúsculas de la "a" a la "z"
+
+a{n,}
+  * Especifica un número n o más del caracter orecedente; por ejemplo x{3,} se refiere a 3 x o más
+
+a{n,m}
+  * Especifica un rando de números entre "n" y "m" del carácter precedente; por ejemplo x{3,7} se
+    refiere a 3, 4, 5, 6 o 7 "x"
+
+()
+  * Se utiliza para agrupar juntos un grupo de caracteres, considerándolos como una sola unidad;
+    por ejemplo (ayuda)?wordpress se referirá a wordpress, ya son con o sin el prefijo ayuda
+  
+^ 
+  * Indica el comienzo de una cadena de prueba de una expresión regular (regex); por ejemplo, empezar
+    el argumento con el carácter anterior
+
+$
+  * Indica el fin de una cadena de prueba de una expresión regular; por ejemplo, terminar el argumento
+    con el carácter anterior
+
+? 
+  * Declara opcional el carácter precedente; por ejemplo "vista?" valdrá para vistas y vista, meintras
+    que "vista(s)?" se referirá tanto a vista como a vistas; por ejemplo x? se refiere a ninguna o
+    una x
+
+!
+  * Declara la negación; por ejemplo "!cadena" valdrá para todo menos para "cadena"
+
+.
+  * Un punto (o periodo) indica cualquier carácter arbitrario simple
+
+-
+  * Indica que "no se" haga rewrite de la URL, com en "...dominio.es.* - [F]"
+
++
+  * Se refiere a uno o más carácteres del carácter precedente; por ejemplo, G+ se refiere a
+    una o más Gs, mientas que simpelemnte <<+>> vale para uno o varios carácteres de cualquier tipo
+
+*
+  * Se refiere a cero o más de los caracteres precedentes; por ejemplo, puedes uasr ".*" como comodín
+
+| 
+  * Declara un operador lógico "or"; por ejemplo (x|y) vale para "y" o "x"
+
+\
+  * Escapa caracteres especiales (^ $ ! . * |); por ejemplo, usa "\." para indicar/escapar un punto
+    literalmente
+
+\.
+  * Indica un punto literal (escapado)
+  
+/*
+  * Cero o más barras
+
+.*
+  * Cero o más carácteres arbitrarios
+
+^$
+  * Define una cadena vacía
+  
+^.*$
+  * El patrón estándar para que valga cualquier cadena
+
+[^/.]
+  * Define un carácter que no s ni una barra ni un punto
+
+[^/.]+
+  * defune cualquier número o caracteres que no contengan ni barra ni punto
+
+http://
+  * Esta es una declaración literal -- en este caso la cedena de caracteres literal "http://"
+
+^domain.*
+  * Define una cadena que comienza con el término "domain", probablemente precedidi por cualquier
+    número de caracteres
+
+^domain\.com$
+  * Define la cadena exacta "domain.com"
+
+-d
+  * Comprueba si la cadena es un directorio existente
+
+-f
+  * Comprueba si la cadena es un archivo existente
+
+-s
+  * Comprueba si el archivo de la cadena contiene un valor que no sea cero
+
+
+## CODIGOS DE REDIRECCIÓN DE CABECERA
+
+* 301: Movido permanentenmente
+* 302: Movido temporalmente
+* 403: Prohibido
+* 404: No encontrado
+* 410: ido
+
+## DIRECTIVAS BÁSICAS DE .htaccess
+
+# . Activar el rewrite básico
+  * RewriteEngine on
+
+# . Activar enlaces simbólicos
+  * Options +FollowSymLinks
+
+# . Activar AllowOverride
+  * AllowOverride Options
+
+# . Renombrar el archivo .htaccess
+  * AccessFileName "ht.nuevonombre";
+
+# . Proteger archivos htaccess renombrados
+  * Order dny,allow
+    Deny from all
+
+# . Heredar reglas definidas en httpd.conf para ahorrar repetidos
+  * RewriteOptions Inherit
+
+
+## MEJORAR RENDIMIENTO DE LA WEB CON .htaccess
+  
+  # . Mejorar el rendimiento desactivando el allow override
+    * AllowOverride None
+
+  # . Mejorar rendimiento indicando el conjunto de caracteres por defecto
+    * AddDefaultCharset utf-8
+
+  # . Ahorrando ancho de banda en servidores con PHP activo
+    * php_value zlib.output_compression 16386
+
+  # . Desactivando la firma del servidor
+    * ServerSignature Off
+
+  # . Estableciendo la zona horaria del servidor
+    * SetEnv TZ Spain/Madrid
+  
+  # . Estableciendo el email del administrador del servidor
+    * SetEnv SERVER_ADMIN admin@dominio.es
+
+  # . Mejorando la velocidad de transferencia activando la cache de archivos
+    * Header set Cache-Control "max-age=2592000"
+  # . Cache de textos, css y javascript una semana
+    * Header set Cache-Control "max-age=604800"
+  # . Cache de archivos html un día
+    * Header set Cache-Control "max-age=43200"
+  # . Activar la cache mínima durante tareas de desarrollo en el sitio
+    * Header set Cache-Control "max-age=5"
+  # . Desactivar la cache para scripts y archivos dinámicos contretos
+    * Header unset Cache-Control
+  # . Método alternativo para cache de archivos
+    * ExpiresActive On
+    * ExpiresDefault A604800 # 1 semana
+    * ExpiresByType image/x-icon A2419200 # 1 mes
+    * ExpiresByType application/x-javascript A2419200 # 1 mes
+    * ExpiresByType text/css A2419200 # 1 mes
+    * ExpiresByType text/html A300 # 5 minutos
+    * ExpiresActive Off # para archivos dinámicos concretos
+  
+  # Conversion de intervalo comunes de timpo en segundos
+    * 300 = 5 minutos
+    * 2700 = 45 minutos
+    * 3600 = 1 hora
+    * 54000 = 15 horas
+    * 86400 = 1 día
+    * 518400 = 6 días
+    * 604800 = 1 semana
+    * 1814400 = 3 semanas
+    * 2419200 = 1 mes
+    * 26611200 = 11 meses
+    * 29030400 = 1 año = no expira nunca
+
+  # . Establecer idioma por defecto
+    * DefaultLanguage es-ES
+
+  # . Decalarando tipos de MIME específicos/adicionales
+    * AddType application/x-shockwave-flash .swf
+    * AddType video/x-flv .flv
+    * AddType image/x-icon .ico
+
+  # . Enviando conjunto de carácteres y otras cabeceras sin meta tags
+    * AddDefaultCharset UTF-8
+    * DefaultLanguage es-ES
+
+  # . Limitando métodos de petición GET y PUT al servidor
+    * Options -ExecCGI -Indexes -All
+    * RewriteEngine on
+    * RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK|OPTIONS|HEAD) RewriteRule .* - [F]
+
+  # . Procesar archvios según el método de petición al servidor
+    * Script PUT /cgi-bin/upload.cgi
+    * Script GET /cgi-bin/download.cgi
+
+  # . Ejecutando varios archivos mediante un script cgi
+    * Action image/png /cgi-bin/png-script.cgi
+
+
+## MEJORAR LA SEGURIDAD DEL SITIO WEB CON .htaccess
+
+  # . Asegurando el archivo .htaccess
+    * htaccess>
+    * order allow, deny
+    * deny from all
+
+  # . Aplicar la misma directiva
+
+  # . Evitar la navegación de directorios no autorizado
+    # . Modo 1 
+      * Options All -Indexes
+    # . Modo 2
+      * IndexIgnore *
+
+  # . Directiva para evitar mostrar que se muestren ciertos archivos
+    * IndexIgnore *.pdf *.ogg *.gif
+
+  # . Indicarle al servidor que cargue una página índica alterna
+    * DirectoryIndex "mipagina.html"
+
+  # . Ocultra los scritps reemplazando las extensiones por una presonalizda
+    * AddType application/x-httpd-php .foo
+  
+  # . Limitar el acceso a una red de áreea local
+    * order deny, allow
+    * deny from all
+    * allow from 192.168.0.0/33
+
+  # . Negar el acceso a por IP's y/o dominios específicos
+    * order allow,deny
+    * allow from all
+    * deny from 16.152.254.10
+    * deny from .*dominio\.es*
+  # . Caso para permitir el acceso 
+    * order allow,deny
+    * deny from all
+    * allow from 16.152.254.10
+    * allow from .*dominio\.es*
+
+  # . Bloquear visitantes de otros dominios
+    * RewriteEngine on
+    * RewriteCond %{HTTP_REFERER} robaperas\.info [NC,OR]
+    * RewriteCond %{HTTP_REFERER} pagafantas\.net [NC,OR]
+    * RewriteRule .* - [F]
+
+  # . Denegar acceso al dominio según rangos de IP
+    * order allow,deny
+    * allow from all
+    * deny from 128.1.101.0/25
+    * deny from 11.58.126.0/11
+  # . En caso de permitir el acceso
+    * order allow,deny
+    * deny from all
+    * allow from 128.1.101.0/25
+    * allow from 11.58.126.0/11
+  # . Método alterno para bloquear rangos de IP's
+    * order allow,deny
+    * allow from all
+    * deny from 99.88.77.66
+    * deny from 99.88.77.*
+    * deny from 99.88.*.*
+    * deny from 99.*.*.*
+  # . Método alterno para permitir rangos de IP's
+    * order allow,deny
+    * deny from all
+    * allow from 99.88.77.66
+    * allow from 99.88.77.*
+    * allow from 99.88.*.*
+    * allow from 99.*.*.*
+  # . Bloqueo de IP's en una sola línea
+    * deny from 99.88.77.66 11.22.33.44
+  # . En caso de permitir acceso
+    * deny allow 99.88.77.66 11.22.33.44
+
+  
